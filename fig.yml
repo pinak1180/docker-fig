@@ -1,0 +1,21 @@
+db:
+  image: postgres:9.3
+  volumes:
+    - ~/.docker-volumes/app-name/db/:/var/lib/postgresql/data/
+  ports:
+    - 5432
+elasticsearch:
+  image: dockerfile/elasticsearch
+  ports:
+   - 19200:9200
+   - 19300:9300
+web:
+  build: .
+  command: bundle exec unicorn_rails -p 3000
+  volumes:
+    - .:/usr/src/app
+  ports:
+    - 3000:3000
+  links:
+    - db
+    - elasticsearch
